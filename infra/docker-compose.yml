@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # PostgreSQL + PostGIS
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: geo_postgres
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - geo_network
+
+  # Django приложение
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: geo_backend
+    env_file:
+      - ./.env
+    volumes:
+      - ../backend:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - geo_network
+    command: >
+      sh -c "python manage.py makemigrations --noinput &&
+             python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             gunicorn geo.wsgi:application --bind 0.0.0.0:8000"
+
+  # Nginx gateway
+  gateway:
+    build:
+      context: ../gateway
+      dockerfile: Dockerfile
+    container_name: geo_gateway
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - static_volume:/usr/share/nginx/html/static:ro
+      - media_volume:/usr/share/nginx/html/media:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+    networks:
+      - geo_network
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+
+networks:
+  geo_network:
+    driver: bridge
