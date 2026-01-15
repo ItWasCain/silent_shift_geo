@@ -39,15 +39,15 @@ docker compose exec backend python manage.py createsuperuser
 docker compose exec backend python manage.py collectstatic --no-input
 ```
 ### 6. Проект будет доступен по адресам:
-API: http://localhost/api/
-Админ-панель: http://localhost/admin/
+- API: http://localhost/api/
+- Админ-панель: http://localhost/admin/
 
 
 ## API Документация
 ### Аутентификация
 Регистрация пользователя
 ```
-POST http://localhost:8000/api/auth/register/
+POST http://localhost/api/auth/register/
 Content-Type: application/json
 
 {
@@ -58,7 +58,7 @@ Content-Type: application/json
 ```
 Получение JWT токена
 ```
-POST http://localhost:8000/api/auth/token/
+POST http://localhost/api/auth/token/
 Content-Type: application/json
 
 {
@@ -68,7 +68,7 @@ Content-Type: application/json
 ```
 Обновление токена
 ```
-POST http://localhost:8000/api/auth/token/refresh/
+POST http://localhost/api/auth/token/refresh/
 Content-Type: application/json
 
 {
@@ -77,7 +77,7 @@ Content-Type: application/json
 ```
 Проверка токена
 ```
-POST http://localhost:8000/api/auth/token/verify/
+POST http://localhost/api/auth/token/verify/
 Content-Type: application/json
 
 {
@@ -87,7 +87,7 @@ Content-Type: application/json
 ### Точки (Points)
 Создание точки
 ```
-POST http://localhost:8000/api/points/
+POST http://localhost/api/points/
 Authorization: Bearer ваш_access_токен
 Content-Type: application/json
 
@@ -99,17 +99,17 @@ Content-Type: application/json
 ```
 Получение всех точек
 ```
-GET http://localhost:8000/api/points/
+GET http://localhost/api/points/
 Authorization: Bearer ваш_access_токен
 ```
 Получение конкретной точки
 ```
-GET http://localhost:8000/api/points/{id}/
+GET http://localhost/api/points/{id}/
 Authorization: Bearer ваш_access_токен
 ```
 Поиск точек в радиусе
 ```
-POST http://localhost:8000/api/points/search/
+POST http://localhost/api/points/search/
 Authorization: Bearer ваш_access_токен
 Content-Type: application/json
 
@@ -121,7 +121,7 @@ Content-Type: application/json
 ```
 Обновление точки
 ```
-PUT http://localhost:8000/api/points/{id}/
+PUT http://localhost/api/points/{id}/
 Authorization: Bearer ваш_access_токен
 Content-Type: application/json
 
@@ -133,7 +133,7 @@ Content-Type: application/json
 ```
 Частичное обновление точки
 ```
-PATCH http://localhost:8000/api/points/{id}/
+PATCH http://localhost/api/points/{id}/
 Authorization: Bearer ваш_access_токен
 Content-Type: application/json
 
@@ -143,13 +143,13 @@ Content-Type: application/json
 ```
 Удаление точки
 ```
-DELETE http://localhost:8000/api/points/{id}/
+DELETE http://localhost/api/points/{id}/
 Authorization: Bearer ваш_access_токен
 ```
 ### Сообщения
 Создание сообщения
 ```
-POST http://localhost:8000/api/messages/points/messages/
+POST http://localhost/api/messages/points/messages/
 Authorization: Bearer ваш_access_токен
 Content-Type: application/json
 
@@ -160,17 +160,17 @@ Content-Type: application/json
 ```
 Получение всех сообщений
 ```
-GET http://localhost:8000/api/messages/
+GET http://localhost/api/messages/
 Authorization: Bearer ваш_access_токен
 ```
 Получение конкретного сообщения
 ```
-GET http://localhost:8000/api/messages/{id}/
+GET http://localhost/api/messages/{id}/
 Authorization: Bearer ваш_access_токен
 ```
 Поиск сообщений в радиусе
 ```
-POST http://localhost:8000/api/messages/search/
+POST http://localhost/api/messages/search/
 Authorization: Bearer ваш_access_токен
 Content-Type: application/json
 
@@ -182,7 +182,7 @@ Content-Type: application/json
 ```
 Обновление сообщения
 ```
-PUT http://localhost:8000/api/messages/{id}/
+PUT http://localhost/api/messages/{id}/
 Authorization: Bearer ваш_access_токен
 Content-Type: application/json
 
@@ -192,27 +192,27 @@ Content-Type: application/json
 ```
 Удаление сообщения
 ```
-DELETE http://localhost:8000/api/messages/{id}/
+DELETE http://localhost/api/messages/{id}/
 Authorization: Bearer ваш_access_токен
 ```
 
 ## Важные моменты
-Все запросы (кроме регистрации и получения токена) требуют Authorization Header
-Для создания точек/сообщений нужно сначала получить токен
-ID точек и сообщений смотрите в ответах на GET-запросы
-Удаление/обновление доступно только автору или администратору
-Координаты должны быть в диапазонах:
-Широта (latitude): от -90.0 до 90.0
-Долгота (longitude): от -180.0 до 180.0
+- Все запросы (кроме регистрации и получения токена) требуют Authorization Header
+- Для создания точек/сообщений нужно сначала получить токен
+- ID точек и сообщений смотрите в ответах на GET-запросы
+- Удаление/обновление доступно только автору или администратору
+- Координаты должны быть в диапазонах:
+- Широта (latitude): от -90.0 до 90.0
+- Долгота (longitude): от -180.0 до 180.0
 
 ## Технологии
-Backend: Python 3.11+, Django 4.2+, Django REST Framework 3.14+
-База данных: PostgreSQL 15+ с PostGIS 3.3+
-Аутентификация: JWT (Django REST Framework Simple JWT)
-Геоданные: Django GIS, GEOS, GDAL
-Контейнеризация: Docker, Docker Compose
-Веб-сервер: Nginx
-Формат данных: JSON
+- Backend: Python 3.11+, Django 4.2+, Django REST Framework 3.14+
+- База данных: PostgreSQL 15+ с PostGIS 3.3+
+- Аутентификация: JWT (Django REST Framework Simple JWT)
+- Геоданные: Django GIS, GEOS, GDAL
+- Контейнеризация: Docker, Docker Compose
+- Веб-сервер: Nginx
+- Формат данных: JSON
 
 ## Разработчик
 Никита Песчанов https://github.com/ItWasCain
